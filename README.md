@@ -1,6 +1,6 @@
 # Flow-Project
 
-# TODO list
+# How to make it work
   1. Flow
   2. Fix package.json file
   3. Fork project whenever redux is ready
