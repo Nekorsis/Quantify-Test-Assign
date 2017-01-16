@@ -1,7 +1,6 @@
 # Flow-Project
 
 # How to make it work
-  1. Flow
-  2. Fix package.json file
-  3. Fork project whenever redux is ready
-  4. Fork for TypeScript version
+  1. Clone this repo
+  2. Do npm install
+  3. Go to localhost:3000
