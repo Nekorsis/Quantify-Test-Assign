@@ -1,0 +1,108 @@
+.headerContainer {
+  width: 100%;
+  height: 65px;
+  margin: auto;
+  border: 1px solid #000;
+  background-color: #a5a0a0;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.headerCounter {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-top: 7px;
+  margin-right: 25px;
+}
+
+.headerEventsList {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+.eventTitle {
+  font-weight: 800;
+  height: 30px;
+}
+
+.eventTime {
+  font-weight: 400;
+  height: 30px;
+}
+
+.qs {
+  background-image:url('https://cdn4.iconfinder.com/data/icons/48-bubbles/48/43.Bell-256.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 16px;
+  color: #e3fbff;
+  cursor: default;
+  display: inline-block;
+  font-family: 'Helvetica',sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  height: 45px;
+  line-height: 45px;
+  position: relative;
+  text-align: center;
+  width: 45px;
+  }
+.popover {
+    background-color: #e8e2e2;
+    border-radius: 5px;
+    bottom: -335px;
+    color: black;
+    display: none;
+    font-size: 12px;
+    font-family: 'Helvetica',sans-serif;
+    left: -150px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    position: absolute;
+    width: 200px;
+    z-index: 4;
+    &:before {
+        border-top: 7px solid white;
+        border-right: 7px solid transparent;
+        border-left: 7px solid transparent;
+        bottom: -7px;
+        content: '';
+        display: block;
+        left: 50%;
+        margin-left: -7px;
+        position: absolute;
+    }
+}
+
+.qs:hover .popover {
+    display: block;
+    -webkit-animation: fade-in .3s linear 1, move-down .3s linear 1;
+    -moz-animation: fade-in .3s linear 1, move-down .3s linear 1;
+    -ms-animation: fade-in .3s linear 1, move-down .3s linear 1;
+}
+
+@-webkit-keyframes fade-in {
+	from   { opacity: 0; }
+	to { opacity: 1; }
+}
+@-moz-keyframes fade-in {
+	from   { opacity: 0; }
+	to { opacity: 1; }
+}
+@-ms-keyframes fade-in {
+	from   { opacity: 0; }
+	to { opacity: 1; }
+}
+@-webkit-keyframes move-down {
+	from   { bottom: -245; }
+	to { bottom: -335px; }
+}
+@-moz-keyframes move-down {
+	from   { bottom: -245; }
+	to { bottom: -335px; }
+}
+@-ms-keyframes move-down {
+	from   { bottom: -245; }
+	to { bottom: -335px; }
+}

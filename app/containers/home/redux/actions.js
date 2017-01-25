@@ -15,5 +15,15 @@ const requestEvents = () => {
   };
 };
 
+const readAllEvents = () => {
+  return { type: types.EVENTS_READ_ALL_EVENTS, payload: {} };
+}
 
-export { requestEvents };
+const deleteAllEvents = () => {
+  return { type: types.EVENTS_DELETE_ALL_EVENTS, payload: {} };
+}
+
+const addEvent = eventName => {
+  return { type: types.EVENTS_ADD_EVENT, payload: {eventName} };
+}
+export { requestEvents, readAllEvents, deleteAllEvents, addEvent };

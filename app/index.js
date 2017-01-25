@@ -1,6 +1,5 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import { Router, Route, hashHistory } from 'react-router';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -12,9 +11,6 @@ const store = createStoreWithMiddleware(rootReducer, window.__REDUX_DEVTOOLS_EXT
 
 ReactDOM.render((
   <Provider store={store}>
-    <Router history={hashHistory}>
-      <Route path="/" component={Home}/>
-      <Route path="/home" component={Home}/>
-    </Router>
+    <Home/>
   </Provider>
 ), document.getElementById('app'));
