@@ -9,6 +9,7 @@ const initialState = {
 };
 
 const filterEvents = (events) => {
+    console.log('filterEvents: ', events);
     const eventsArray = events.events.map(event => ({
       ...event,
       unread: false,
@@ -45,9 +46,15 @@ const appReducers = (state = initialState, { type, payload }) => {
       isEventsRequestSucceeded: true,
     };
   case types.EVENTS_READ_ALL_EVENTS:
+    console.log("EVENTS_DELETE_ALL_EVENTS: ", state)
     return {
       ...state,
       events: filterEvents(state.events)
+    }
+  case types.EVENTS_DELETE_ALL_EVENTS:
+    return {
+      ...state,
+      events: {}
     }
   case types.EVENTS_ADD_EVENT:
     return {

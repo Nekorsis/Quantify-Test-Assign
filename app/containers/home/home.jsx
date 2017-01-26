@@ -15,6 +15,7 @@ function mapStateToProps(state) {
     requestEvents: state.appReducers.requestEvents,
     isEventsRequestSucceeded: state.appReducers.isEventsRequestSucceeded,
     readAllEvents: state.appReducers.readAllEvents,
+    deleteAllEvents: state.appReducers.deleteAllEvents,
     addEvent: state.appReducers.addEvent,
   };
 }
@@ -31,6 +32,7 @@ class Home extends React.Component {
     isEventsRequestSucceeded: React.PropTypes.bool,
     readAllEvents: React.PropTypes.func,
     addEvent: React.PropTypes.func,
+    deleteAllEvents: React.PropTypes.func,
   }
 
   constructor(props) {
@@ -69,6 +71,7 @@ class Home extends React.Component {
             <Header events={this.props.events.events}/>
             <div className={styles.buttonsContainer}>
             <button className={styles.button} onClick={this.props.readAllEvents}>Пометить все события прочитанными</button>
+            <button className={styles.button} onClick={this.props.deleteAllEvents}>Удалить все события</button>
             <input className={styles.input} placeholder={"Введите имя события ..."} type='text' value={this.state.eventNameInput} onChange={this.onInputChange}/>
             <button className={styles.button} onClick={this.onButtonClick}>Добавить событие</button>
             </div>

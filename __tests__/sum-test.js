@@ -2,6 +2,7 @@ import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store'
 import nock from 'nock'
 import fetch from 'isomorphic-fetch';
+import { actionTest, asyncReducerTest, reducerTest } from 'redux-jest';
 
 import * as actions from './../app/containers/home/redux/actions';
 import { actionTypes as types } from './../app/containers/home/redux/actionTypes';
@@ -9,35 +10,71 @@ import rootReducer from './../app/containers/home/redux/reducers';
 
 const middlewares = [ thunk ];
 const mockStore = configureMockStore(middlewares);
-const mockEvents = [{
+
+const events = [{
   id: 17,
   title: 'Test test test 17',
   unread: true,
-  datetime: new Date(),
+  datetime: 123,
 }];
+
+const store = mockStore({
+  isEventsRequestSend: false,
+  isEventsRequestSucceeded: false,
+  isEventsRequestFailed: false,
+  events: {}, 
+});
+
+const filledStore = mockStore({
+  isEventsRequestSend: false,
+  isEventsRequestSucceeded: false,
+  isEventsRequestFailed: false,
+  events: {events: [{
+    id: 17,
+    title: 'Test test test 17',
+    unread: true,
+    datetime: 123,    
+  }]}, 
+});
+
+const filledStoreRead = mockStore({
+  isEventsRequestSend: false,
+  isEventsRequestSucceeded: false,
+  isEventsRequestFailed: false,
+  events: {events: [{
+    id: 17,
+    title: 'Test test test 17',
+    unread: false,
+    datetime: 123,    
+  }]}, 
+});
 
 // Test action creators
 describe('test actions', () => {
-  /*
   it('should create an action to request events from server', () => {
 
      nock('http://localhost:3000/')
       .get('/events')
-      .reply(200, { body: { mockEvents }});
+      .reply(200, { events });
+      
+    const localEvents = {events: [{
+      id: 17,
+      title: 'Test test test 17',
+      unread: true,
+      datetime: 123,
+    }]};
 
     const expectedActions = [
       {type: types.REQUEST_EVENTS},
-      {type: types.REQUEST_EVENTS_SUCCSESS, payload: {events: mockEvents}}
+      {type: types.REQUEST_EVENTS_SUCCSESS, payload:{ events: localEvents }}
     ];
 
-    const store = mockStore({ events: {} });
-    
     return store.dispatch(actions.requestEvents())
       .then(() => {
         expect(store.getActions()).toEqual(expectedActions)
       })
   });
-  */
+
   it('should call EVENTS_READ_ALL_EVENTS action', () => {
     const expectedAction = {type: types.EVENTS_READ_ALL_EVENTS, payload: {}};
      
@@ -57,40 +94,27 @@ describe('test actions', () => {
   });
 });
 
-describe('test reducer', () => {
+// Test reducer
+describe('Testing reducer', () => {
+  reducerTest('this should handle REQUEST_EVENTS reducer', rootReducer, store, {type: types.REQUEST_EVENTS, payload: {}}, {
+    appReducers: {
+      isEventsRequestSend: true,
+      isEventsRequestSucceeded: false,
+      isEventsRequestFailed: false,
+      events: {},
+    }}
+  );
 
-  it('should handle REQUEST_EVENTS', () => {
-    expect(
-      rootReducer([], {
-        type: types.REQUEST_EVENTS,
-        isEventsRequestSend: false
-      })
-    ).toEqual(
-      {"appReducers": {"events": {}, "isEventsRequestFailed": false, "isEventsRequestSend": true, "isEventsRequestSucceeded": false}}
-    )
-  });
-
-  /*
-  it('should handle REQUEST_EVENTS_SUCCSESS', () => {
-    expect(
-      rootReducer([], {
-        type: types.REQUEST_EVENTS_SUCCSESS,
-        isEventsRequestSucceeded: false,
-      })
-    ).toEqual(
-      {"appReducers": {"events": {}, "isEventsRequestFailed": false, "isEventsRequestSend": false, "isEventsRequestSucceeded": true}}
-    )
-  });
-  */
-  it('should handle EQUEST_EVENTS_SUCCSESS', () => {
-    expect(
-      rootReducer([], {
-        type: types.EQUEST_EVENTS_SUCCSESS,
-        isEventsRequestSucceeded: false,
-        events: {},
-      })
-    ).toEqual(
-      {"appReducers": {"events": {}, "isEventsRequestFailed": false, "isEventsRequestSend": false, "isEventsRequestSucceeded": false}}
-    )
-  });
-})
+  reducerTest('this should handle REQUEST_EVENTS_SUCCSESS reducer', rootReducer, store, {type: types.REQUEST_EVENTS_SUCCSESS, payload: {events}}, {appReducers: {
+    isEventsRequestSend: false,
+    isEventsRequestSucceeded: true,
+    isEventsRequestFailed: false,
+    events: events, // ?????????
+  }});  
+  
+  reducerTest('this shoud handle EVENTS_READ_ALL_EVENTS', 
+    rootReducer, 
+    {events: {events: [{id: 17, title: 'Test test test 17', unread: true, datetime: 123}]}}, 
+    {type: types.EVENTS_READ_ALL_EVENTS, payload: {}}, 
+    {events: {events: [{id: 17, title: 'Test test test 17', unread: false, datetime: 123}]}});
+});

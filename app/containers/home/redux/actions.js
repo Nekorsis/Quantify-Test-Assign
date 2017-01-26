@@ -26,4 +26,5 @@ const deleteAllEvents = () => {
 const addEvent = eventName => {
   return { type: types.EVENTS_ADD_EVENT, payload: {eventName} };
 }
+
 export { requestEvents, readAllEvents, deleteAllEvents, addEvent };
