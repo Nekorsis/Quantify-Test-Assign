@@ -48,7 +48,7 @@ class Home extends React.Component {
   }
 
   onButtonClick = () => {
-    this.props.addEvent(this.state.eventNameInput);
+    this.state.eventNameInput != '' ? this.props.addEvent(this.state.eventNameInput) : null
     this.setState({
       eventNameInput: '',
     });
@@ -61,7 +61,7 @@ class Home extends React.Component {
     const timerId = setInterval(() => {
       const randomName = Math.floor(Math.random() * (100 - 18) + 18);
       this.props.addEvent(`Random event name ${randomName}`);
-    }, 10000);
+    }, 40000);
   }
   render() {
     return (

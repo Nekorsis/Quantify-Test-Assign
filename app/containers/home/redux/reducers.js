@@ -9,7 +9,6 @@ const initialState = {
 };
 
 const filterEvents = (events) => {
-    console.log('filterEvents: ', events);
     const eventsArray = events.events.map(event => ({
       ...event,
       unread: false,
@@ -18,13 +17,12 @@ const filterEvents = (events) => {
     return result;
 };
 
-const addEvent = (events, eventName) => {
-  const randomNumber = Math.random();
+const addEvent = (events, eventName, eventId) => {
   const randomEvent = {
-    id: randomNumber,
+    id: eventId,
     title: eventName,
     unread: true,
-    datetime: new Date(),
+    datetime: new Date().setDate((new Date()).getDate() - 1),
   }
   const newEvent = events.events;
   newEvent.push(randomEvent);
@@ -46,7 +44,6 @@ const appReducers = (state = initialState, { type, payload }) => {
       isEventsRequestSucceeded: true,
     };
   case types.EVENTS_READ_ALL_EVENTS:
-    console.log("EVENTS_DELETE_ALL_EVENTS: ", state)
     return {
       ...state,
       events: filterEvents(state.events)
@@ -54,12 +51,12 @@ const appReducers = (state = initialState, { type, payload }) => {
   case types.EVENTS_DELETE_ALL_EVENTS:
     return {
       ...state,
-      events: {}
+      events: {events: [{}]}
     }
   case types.EVENTS_ADD_EVENT:
     return {
       ...state,
-      events: addEvent(state.events, payload.eventName),
+      events: addEvent(state.events, payload.eventName, state.events.events.length + 11),
     }
   default: return state;
   }

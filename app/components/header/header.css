@@ -51,7 +51,7 @@
 .popover {
     background-color: #e8e2e2;
     border-radius: 5px;
-    bottom: -335px;
+    top: 50px;
     color: black;
     display: none;
     font-size: 12px;
@@ -95,14 +95,14 @@
 	to { opacity: 1; }
 }
 @-webkit-keyframes move-down {
-	from   { bottom: -245; }
-	to { bottom: -335px; }
+	from   { top: 10px; }
+	to { top: 50px; }
 }
 @-moz-keyframes move-down {
-	from   { bottom: -245; }
-	to { bottom: -335px; }
+	from   { top: 10px; }
+	to { top: 50px; }
 }
 @-ms-keyframes move-down {
-	from   { bottom: -245; }
-	to { bottom: -335px; }
+	from   { top: 10px; }
+	to { top: 50px; }
 }

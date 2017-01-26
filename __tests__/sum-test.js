@@ -2,7 +2,6 @@ import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store'
 import nock from 'nock'
 import fetch from 'isomorphic-fetch';
-import { actionTest, asyncReducerTest, reducerTest } from 'redux-jest';
 
 import * as actions from './../app/containers/home/redux/actions';
 import { actionTypes as types } from './../app/containers/home/redux/actionTypes';
@@ -11,52 +10,27 @@ import rootReducer from './../app/containers/home/redux/reducers';
 const middlewares = [ thunk ];
 const mockStore = configureMockStore(middlewares);
 
-const events = [{
-  id: 17,
-  title: 'Test test test 17',
-  unread: true,
-  datetime: 123,
-}];
-
-const store = mockStore({
-  isEventsRequestSend: false,
-  isEventsRequestSucceeded: false,
-  isEventsRequestFailed: false,
-  events: {}, 
-});
-
-const filledStore = mockStore({
-  isEventsRequestSend: false,
-  isEventsRequestSucceeded: false,
-  isEventsRequestFailed: false,
-  events: {events: [{
-    id: 17,
-    title: 'Test test test 17',
-    unread: true,
-    datetime: 123,    
-  }]}, 
-});
-
-const filledStoreRead = mockStore({
-  isEventsRequestSend: false,
-  isEventsRequestSucceeded: false,
-  isEventsRequestFailed: false,
-  events: {events: [{
-    id: 17,
-    title: 'Test test test 17',
-    unread: false,
-    datetime: 123,    
-  }]}, 
-});
-
 // Test action creators
 describe('test actions', () => {
   it('should create an action to request events from server', () => {
+    const events = [{
+      id: 17,
+      title: 'Test test test 17',
+      unread: true,
+      datetime: 123,
+    }];
+
+    const store = mockStore({
+      isEventsRequestSend: false,
+      isEventsRequestSucceeded: false,
+      isEventsRequestFailed: false,
+      events: {}, 
+    });
 
      nock('http://localhost:3000/')
       .get('/events')
       .reply(200, { events });
-      
+
     const localEvents = {events: [{
       id: 17,
       title: 'Test test test 17',
@@ -96,25 +70,73 @@ describe('test actions', () => {
 
 // Test reducer
 describe('Testing reducer', () => {
-  reducerTest('this should handle REQUEST_EVENTS reducer', rootReducer, store, {type: types.REQUEST_EVENTS, payload: {}}, {
-    appReducers: {
-      isEventsRequestSend: true,
-      isEventsRequestSucceeded: false,
-      isEventsRequestFailed: false,
-      events: {},
-    }}
-  );
+  describe('Should handle EVENTS_ADD_EVENT', () => {
+    let state;
+    
+    state = {appReducers: {events: {
+      events: [{
+        id: 17,
+        title: 'Test test test 17',
+        unread: true,
+        datetime: 123,
+      }]
+    }}};
+    
+    it('return new event to events object', () => {
+      expect(rootReducer(state, {type: types.EVENTS_ADD_EVENT, payload: {events: state.events, eventName: 'test', eventId: 444}})).toEqual({appReducers: {events: {
+      events: [
+        { id: 17, title: 'Test test test 17', unread: true, datetime: 123, },
+        { id: 12, title: 'test', unread: true, datetime: new Date().setDate((new Date()).getDate() - 1)}]
+    }}});
+    });
+  });
 
-  reducerTest('this should handle REQUEST_EVENTS_SUCCSESS reducer', rootReducer, store, {type: types.REQUEST_EVENTS_SUCCSESS, payload: {events}}, {appReducers: {
-    isEventsRequestSend: false,
-    isEventsRequestSucceeded: true,
-    isEventsRequestFailed: false,
-    events: events, // ?????????
-  }});  
-  
-  reducerTest('this shoud handle EVENTS_READ_ALL_EVENTS', 
-    rootReducer, 
-    {events: {events: [{id: 17, title: 'Test test test 17', unread: true, datetime: 123}]}}, 
-    {type: types.EVENTS_READ_ALL_EVENTS, payload: {}}, 
-    {events: {events: [{id: 17, title: 'Test test test 17', unread: false, datetime: 123}]}});
+  describe('Should hande REQUEST_EVENTS', () => {
+    let state;
+
+    state = {
+      appReducers: { isEventsRequestSend: false, }
+    };
+
+    it('set vatiable isEventsRequestSend to true', () => {
+      expect(rootReducer(state, {type: types.REQUEST_EVENTS, payload: {}})).toEqual({appReducers: { isEventsRequestSend: true}});
+    });
+  });
+
+  describe('Should handle REQUEST_EVENTS_SUCCSESS', () => {
+    let state;
+    
+    state = {appReducers: { events: {}, isEventsRequestSucceeded: false }};
+    
+    it('return new event to events object', () => {
+      expect(rootReducer(state, {type: types.REQUEST_EVENTS_SUCCSESS, payload: { events : {events: [{id: 17, title: 'Test test test 17', unread: true, datetime: 123}] }} })).toEqual({appReducers: {events: {
+      events: [
+        { id: 17, title: 'Test test test 17', unread: true, datetime: 123, }]},
+        isEventsRequestSucceeded: true,
+      }});
+    });
+  });
+
+  describe('Should handle EVENTS_READ_ALL_EVENTS', () => {
+    let state;
+    
+    state = {appReducers: { events: {events: [{ id: 17, title: 'Test test test 17', unread: true, datetime: 123, }]}}};
+    
+    it('return new event to events object', () => {
+      expect(rootReducer(state, {type: types.EVENTS_READ_ALL_EVENTS, payload: {} })).toEqual({appReducers: {events: {
+      events: [
+        { id: 17, title: 'Test test test 17', unread: false, datetime: 123, }]},
+      }});
+    });
+  });
+  describe('Should handle EVENTS_DELETE_ALL_EVENTS', () => {
+    let state;
+    
+    state = {appReducers: { events: {events: [{ id: 17, title: 'Test test test 17', unread: true, datetime: 123, }]}}};
+    
+    it('return new event to events object', () => {
+      expect(rootReducer(state, {type: types.EVENTS_DELETE_ALL_EVENTS, payload: {} })).toEqual({appReducers: {events: {events: [{}]},
+      }});
+    });
+  });
 });
